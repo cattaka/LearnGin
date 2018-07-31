@@ -39,6 +39,11 @@ func setupRouter() *gin.Engine {
 		"manu": "123", // user:manu password:123
 	}))
 
+	authorized.GET("/admin", func(c *gin.Context) {
+		user := c.MustGet(gin.AuthUserKey).(string)
+		c.JSON(200, gin.H{"user": user, "value": "hoge"})
+	})
+
 	authorized.POST("admin", func(c *gin.Context) {
 		user := c.MustGet(gin.AuthUserKey).(string)
 
@@ -51,6 +56,11 @@ func setupRouter() *gin.Engine {
 			DB[user] = json.Value
 			c.JSON(200, gin.H{"status": "ok"})
 		}
+	})
+
+	// Ping test
+	authorized.GET("/pinping", func(c *gin.Context) {
+		c.String(200, "pong")
 	})
 
 	return r
